@@ -31,25 +31,11 @@ public class LibraryDBServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Book> books = new ArrayList<>();
-        try {
-            Connection connection = getConnection();
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM books");
-            while (resultSet.next()) {
-                String title = resultSet.getString("title");
-                String author = resultSet.getString("author");
-                String isbn = resultSet.getString("isbn");
-                books.add(new Book(title, author, isbn));
-            }
-            getServletContext().setAttribute("books", books);
-            RequestDispatcher dispatcher = req.getRequestDispatcher("libraryDB.jsp");
-            dispatcher.forward(req, resp);
-            statement.close();
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        List<Book> books = getBooksFromDB();
+        getServletContext().setAttribute("books", books);
+
+        RequestDispatcher dispatcher = req.getRequestDispatcher("libraryDB.jsp");
+        dispatcher.forward(req, resp);
     }
 
     @Override
@@ -78,5 +64,24 @@ public class LibraryDBServlet extends HttpServlet {
                 }
             }
         }
+    }
+
+    private List<Book> getBooksFromDB() {
+        List<Book> books = new ArrayList<>();
+        try {
+            Connection connection = getConnection();
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM books");
+            while (resultSet.next()) {
+                String title = resultSet.getString("title");
+                String author = resultSet.getString("author");
+                String isbn = resultSet.getString("isbn");
+                books.add(new Book(title, author, isbn));
+            }
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return books;
     }
 }
