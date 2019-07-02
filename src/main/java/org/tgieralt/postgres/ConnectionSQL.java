@@ -12,6 +12,7 @@ public class ConnectionSQL {
         String dbUrl = System.getenv("JDBC_DATABASE_URL");
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(dbUrl);
+        config.setConnectionTimeout(5000);
         return new HikariDataSource(config);
     }
 }
