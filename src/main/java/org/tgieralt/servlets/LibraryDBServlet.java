@@ -30,7 +30,7 @@ public class LibraryDBServlet extends HttpServlet {
                 long isbn = resultSet.getLong("isbn");
                 books.add(new Book(title, author, isbn));
             }
-            req.setAttribute("books", books);
+            getServletContext().setAttribute("books", books);
             RequestDispatcher dispatcher = req.getRequestDispatcher("libraryDB.jsp");
             dispatcher.forward(req, resp);
         } catch (SQLException e) {
