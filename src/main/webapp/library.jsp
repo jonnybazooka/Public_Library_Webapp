@@ -15,7 +15,21 @@
     %>
 </div>
 
+<div>
+    <form method="POST" action="libraryDB">
+        <p>Title</p>
+        <input type="text" name="title">
+        <p>Author</p>
+        <input type="text" name="author">
+        <p>ISBN Number</p>
+        <input type="text" name="isbn">
+        <p>Add new book to the library</p>
+        <input type="submit" value="Add Book">
+    </form>
+</div>
+
 <div class="home">
+    <a href="libraryDB">Library Database</a>
     <a href="index.jsp">Home</a>
 </div>
 

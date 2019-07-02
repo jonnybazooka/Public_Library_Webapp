@@ -21,4 +21,13 @@
     <url-pattern>/library</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>LibraryDB</servlet-name>
+    <servlet-class>org.tgieralt.servlets.LibraryDBServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>LibraryDB</servlet-name>
+    <url-pattern>/libraryDB</url-pattern>
+  </servlet-mapping>
+
 </web-app>
