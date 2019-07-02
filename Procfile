@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS --port $PORT ./target/myOwnWebapp.war
+web: java $JAVA_OPTS -cp target/myOwnWebapp.war
