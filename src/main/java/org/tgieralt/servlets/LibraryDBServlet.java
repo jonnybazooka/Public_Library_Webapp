@@ -44,9 +44,9 @@ public class LibraryDBServlet extends HttpServlet {
             }
             getServletContext().setAttribute("books", books);
             RequestDispatcher dispatcher = req.getRequestDispatcher("libraryDB.jsp");
+            dispatcher.forward(req, resp);
             statement.close();
             connection.close();
-            dispatcher.forward(req, resp);
         } catch (SQLException e) {
             e.printStackTrace();
         }
