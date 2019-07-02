@@ -25,6 +25,7 @@ public class LibraryDBServlet extends HttpServlet {
         String dbUrl = System.getenv("JDBC_DATABASE_URL");
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(dbUrl);
+        config.setMaximumPoolSize(1);
         DataSource dataSource = new HikariDataSource(config);
         return dataSource.getConnection();
     }
