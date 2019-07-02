@@ -21,7 +21,7 @@ public class LibraryDBServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Book> books = new ArrayList<>();
-        try (Connection connection = ConnectionSQL.getConnection()){
+        try (Connection connection = ConnectionSQL.getDatasource().getConnection()){
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM books");
             while (resultSet.next()) {
@@ -40,7 +40,7 @@ public class LibraryDBServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try (Connection connection = ConnectionSQL.getConnection()){
+        try (Connection connection = ConnectionSQL.getDatasource().getConnection()){
             String title = req.getParameter("title");
             String author = req.getParameter("author");
             String isbn = req.getParameter("isbn");
