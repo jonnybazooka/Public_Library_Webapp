@@ -42,7 +42,6 @@ public class LibraryDBServlet extends HttpServlet {
             connection = getConnection();
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM books");
-            connection.close();
             while (resultSet.next()) {
                 String title = resultSet.getString("title");
                 String author = resultSet.getString("author");
@@ -51,6 +50,7 @@ public class LibraryDBServlet extends HttpServlet {
             }
             getServletContext().setAttribute("books", books);
             RequestDispatcher dispatcher = req.getRequestDispatcher("libraryDB.jsp");
+            connection.close();
             dispatcher.forward(req, resp);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -76,8 +76,8 @@ public class LibraryDBServlet extends HttpServlet {
             Statement statement = connection.createStatement();
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS books (title VARCHAR(30), author VARCHAR(30), isbn VARCHAR(15))");
             statement.executeUpdate("INSERT INTO books VALUES ('" + title + "', '" + author + "', " + isbn + ")");
-            connection.close();
             RequestDispatcher dispatcher = req.getRequestDispatcher("library.jsp");
+            connection.close();
             dispatcher.forward(req, resp);
         } catch (SQLException e) {
             e.printStackTrace();
