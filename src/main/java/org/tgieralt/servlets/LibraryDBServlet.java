@@ -21,24 +21,19 @@ import java.util.List;
 
 public class LibraryDBServlet extends HttpServlet {
 
-    private DataSource dataSource;
-
-    @Override
-    public void init(ServletConfig cfg) throws ServletException {
+    private Connection getConnection() throws SQLException {
         String dbUrl = System.getenv("JDBC_DATABASE_URL");
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(dbUrl);
-        dataSource = new HikariDataSource(config);
-    }
-
-    private Connection getConnection() throws SQLException {
+        DataSource dataSource = new HikariDataSource(config);
         return dataSource.getConnection();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Book> books = new ArrayList<>();
-        try (Connection connection = getConnection()){
+        try {
+            Connection connection = getConnection();
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM books");
             while (resultSet.next()) {
