@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.tgieralt.models.Book;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +24,7 @@ public class LibraryDBServlet extends HttpServlet {
     private DataSource dataSource;
 
     @Override
-    public void init() throws ServletException {
+    public void init(ServletConfig cfg) throws ServletException {
         String dbUrl = System.getenv("JDBC_DATABASE_URL");
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(dbUrl);
@@ -50,6 +51,7 @@ public class LibraryDBServlet extends HttpServlet {
             }
             getServletContext().setAttribute("books", books);
             RequestDispatcher dispatcher = req.getRequestDispatcher("libraryDB.jsp");
+            statement.close();
             connection.close();
             dispatcher.forward(req, resp);
         } catch (SQLException e) {
@@ -77,6 +79,7 @@ public class LibraryDBServlet extends HttpServlet {
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS books (title VARCHAR(30), author VARCHAR(30), isbn VARCHAR(15))");
             statement.executeUpdate("INSERT INTO books VALUES ('" + title + "', '" + author + "', " + isbn + ")");
             RequestDispatcher dispatcher = req.getRequestDispatcher("library.jsp");
+            statement.close();
             connection.close();
             dispatcher.forward(req, resp);
         } catch (SQLException e) {
