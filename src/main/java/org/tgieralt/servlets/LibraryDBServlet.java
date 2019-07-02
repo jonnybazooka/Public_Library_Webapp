@@ -45,7 +45,7 @@ public class LibraryDBServlet extends HttpServlet {
             String author = req.getParameter("author");
             String isbn = req.getParameter("isbn");
             Statement statement = connection.createStatement();
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS books (title VARCHAR(30), author VARCHAR(30), isbn DECIMAL)");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS books (title VARCHAR(30), author VARCHAR(30), isbn BIGINT)");
             statement.executeUpdate("INSERT INTO books VALUES ('" + title + "', '" + author + "', " + isbn + ")");
             RequestDispatcher dispatcher = req.getRequestDispatcher("library.jsp");
             dispatcher.forward(req, resp);
