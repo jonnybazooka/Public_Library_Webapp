@@ -37,10 +37,8 @@ public class LibraryDBServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Connection connection = null;
         List<Book> books = new ArrayList<>();
-        try {
-            connection = getConnection();
+        try (Connection connection = getConnection()){
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM books");
             while (resultSet.next()) {
@@ -56,14 +54,6 @@ public class LibraryDBServlet extends HttpServlet {
             dispatcher.forward(req, resp);
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 
