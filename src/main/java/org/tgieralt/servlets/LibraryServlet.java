@@ -15,7 +15,7 @@ public class LibraryServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Book> myLibrary = new BookFactory().getMyLibrary();
+        List<Book> myLibrary = BookFactory.getMyLibrary();
         getServletContext().setAttribute("myLibrary", myLibrary);
 
         RequestDispatcher dispatcher = req.getRequestDispatcher("library.jsp");

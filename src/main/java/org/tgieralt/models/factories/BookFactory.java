@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BookFactory {
-    public List<Book> getMyLibrary() {
+    public static List<Book> getMyLibrary() {
         List<Book> books = new ArrayList<>();
         books.add(new Book("Game of Thrones", "G.R.R.Martin", "9780553103540"));
         books.add(new Book("Dune", "Frank Herbert", "9780441172719"));

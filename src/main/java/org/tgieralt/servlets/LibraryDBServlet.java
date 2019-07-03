@@ -3,19 +3,16 @@ package org.tgieralt.servlets;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.tgieralt.models.Book;
+import org.tgieralt.models.factories.BookFactory;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +22,7 @@ public class LibraryDBServlet extends HttpServlet {
         String dbUrl = System.getenv("JDBC_DATABASE_URL");
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(dbUrl);
-        config.setMaximumPoolSize(1);
+        config.setMaximumPoolSize(10);
         DataSource dataSource = new HikariDataSource(config);
         return dataSource.getConnection();
     }
@@ -49,9 +46,14 @@ public class LibraryDBServlet extends HttpServlet {
             String isbn = req.getParameter("isbn");
             Statement statement = connection.createStatement();
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS books (title VARCHAR(30), author VARCHAR(30), isbn VARCHAR(15))");
-            statement.executeUpdate("INSERT INTO books VALUES ('" + title + "', '" + author + "', " + isbn + ")");
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO books VALUES (?, ?, ?)");
+            preparedStatement.setString(1, title);
+            preparedStatement.setString(2, author);
+            preparedStatement.setString(3, isbn);
+            preparedStatement.executeUpdate();
             RequestDispatcher dispatcher = req.getRequestDispatcher("library.jsp");
             statement.close();
+            preparedStatement.close();
             connection.close();
             dispatcher.forward(req, resp);
         } catch (SQLException e) {
@@ -69,8 +71,9 @@ public class LibraryDBServlet extends HttpServlet {
 
     private List<Book> getBooksFromDB() {
         List<Book> books = new ArrayList<>();
+        Connection connection = null;
         try {
-            Connection connection = getConnection();
+            connection = getConnection();
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM books");
             while (resultSet.next()) {
@@ -80,9 +83,18 @@ public class LibraryDBServlet extends HttpServlet {
                 books.add(new Book(title, author, isbn));
             }
             connection.close();
+            return books;
         } catch (SQLException e) {
             e.printStackTrace();
+            return BookFactory.getMyLibrary();
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        return books;
     }
 }
