@@ -18,7 +18,7 @@ import java.util.List;
 
 public class LibraryDBServlet extends HttpServlet {
 
-    private String configFile = "resources/db.properties";
+    private String configFile = "./resources/db.properties";
     private HikariConfig config = new HikariConfig(configFile);
     private DataSource dataSource = new HikariDataSource(config);
 
