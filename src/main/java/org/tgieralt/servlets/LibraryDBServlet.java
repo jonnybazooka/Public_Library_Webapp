@@ -16,15 +16,6 @@ import java.util.List;
 
 public class LibraryDBServlet extends HttpServlet {
 
-    /*private Connection getConnection() throws SQLException {
-        *//*String dbUrl = System.getenv("JDBC_DATABASE_URL");
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(dbUrl);
-        config.setMaximumPoolSize(1);
-        dataSource = new HikariDataSource(config);*//*
-        return dataSource.getConnection();
-    }*/
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Book> books = getBooksFromDB();
@@ -36,9 +27,7 @@ public class LibraryDBServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Connection connection = null;
-        try {
-            connection = Datasource.getConnection();
+        try (Connection connection = Datasource.getConnection()){
             String title = req.getParameter("title");
             String author = req.getParameter("author");
             String isbn = req.getParameter("isbn");
@@ -56,22 +45,12 @@ public class LibraryDBServlet extends HttpServlet {
             dispatcher.forward(req, resp);
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 
     private List<Book> getBooksFromDB() {
         List<Book> books = new ArrayList<>();
-        Connection connection = null;
-        try {
-            connection = Datasource.getConnection();
+        try (Connection connection = Datasource.getConnection()){
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM books");
             while (resultSet.next()) {
@@ -85,14 +64,6 @@ public class LibraryDBServlet extends HttpServlet {
         } catch (SQLException e) {
             e.printStackTrace();
             return BookFactory.getMyLibrary();
-        } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 }
