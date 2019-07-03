@@ -5,7 +5,6 @@ target/
 .classpath
 .project
 .settings/
-*.properties
 docs/tmp/
 docs/java-getting-started/
 docs/deploying-spring-boot-apps/

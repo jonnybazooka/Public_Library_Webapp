@@ -1,7 +1,6 @@
 package org.tgieralt.servlets;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
+import org.tgieralt.datasource.Datasource;
 import org.tgieralt.models.Book;
 import org.tgieralt.models.factories.BookFactory;
 
@@ -10,7 +9,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -18,18 +16,14 @@ import java.util.List;
 
 public class LibraryDBServlet extends HttpServlet {
 
-    private String configFile = "db.properties";
-    private HikariConfig config = new HikariConfig(configFile);
-    private DataSource dataSource = new HikariDataSource(config);
-
-    private Connection getConnection() throws SQLException {
-        /*String dbUrl = System.getenv("JDBC_DATABASE_URL");
+    /*private Connection getConnection() throws SQLException {
+        *//*String dbUrl = System.getenv("JDBC_DATABASE_URL");
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(dbUrl);
         config.setMaximumPoolSize(1);
-        dataSource = new HikariDataSource(config);*/
+        dataSource = new HikariDataSource(config);*//*
         return dataSource.getConnection();
-    }
+    }*/
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -44,7 +38,7 @@ public class LibraryDBServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Connection connection = null;
         try {
-            connection = getConnection();
+            connection = Datasource.getConnection();
             String title = req.getParameter("title");
             String author = req.getParameter("author");
             String isbn = req.getParameter("isbn");
@@ -77,7 +71,7 @@ public class LibraryDBServlet extends HttpServlet {
         List<Book> books = new ArrayList<>();
         Connection connection = null;
         try {
-            connection = getConnection();
+            connection = Datasource.getConnection();
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM books");
             while (resultSet.next()) {
