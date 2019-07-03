@@ -18,12 +18,16 @@ import java.util.List;
 
 public class LibraryDBServlet extends HttpServlet {
 
+    private String configFile = "resources/db.properties";
+    private HikariConfig config = new HikariConfig(configFile);
+    private DataSource dataSource = new HikariDataSource(config);
+
     private Connection getConnection() throws SQLException {
-        String dbUrl = System.getenv("JDBC_DATABASE_URL");
+        /*String dbUrl = System.getenv("JDBC_DATABASE_URL");
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(dbUrl);
         config.setMaximumPoolSize(1);
-        DataSource dataSource = new HikariDataSource(config);
+        dataSource = new HikariDataSource(config);*/
         return dataSource.getConnection();
     }
 
@@ -45,7 +49,7 @@ public class LibraryDBServlet extends HttpServlet {
             String author = req.getParameter("author");
             String isbn = req.getParameter("isbn");
             Statement statement = connection.createStatement();
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS books (title VARCHAR(30), author VARCHAR(30), isbn VARCHAR(15))");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS books (title VARCHAR(30), author VARCHAR(30), isbn VARCHAR(13))");
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO books VALUES (?, ?, ?)");
             preparedStatement.setString(1, title);
             preparedStatement.setString(2, author);
