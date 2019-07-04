@@ -1,7 +1,8 @@
 package org.tgieralt.servlets;
 
 import org.tgieralt.models.Book;
-import org.tgieralt.models.factories.BookFactory;
+import org.tgieralt.models.dao.BookDAO;
+import org.tgieralt.models.dao.impl.BookDAOimpl;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,7 +16,8 @@ public class LibraryServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Book> myLibrary = BookFactory.getMyLibrary();
+        BookDAO bookDAO = new BookDAOimpl();
+        List<Book> myLibrary = bookDAO.getBooksFromDB();
         getServletContext().setAttribute("myLibrary", myLibrary);
 
         RequestDispatcher dispatcher = req.getRequestDispatcher("library.jsp");
