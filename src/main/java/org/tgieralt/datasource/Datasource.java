@@ -17,22 +17,7 @@ public class Datasource {
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
         config.setMaximumPoolSize(10);
-        try {
-            hikariDataSource = new HikariDataSource(config);
-        } catch (IllegalArgumentException e) {
-            config.setJdbcUrl(System.getenv().get("JDBC_DATABASE_URL"));
-            config.setDriverClassName("org.postgresql.Driver");
-            hikariDataSource = new HikariDataSource(config);
-        }
-
-        /*
-        try {
-            hikariDataSource = new HikariDataSource(config);
-        } catch (IllegalArgumentException e) {
-            config.setJdbcUrl("jdbc:postgresql://localhost:5432/postgres?user=heroku_library&password=heroku");
-            config.setDriverClassName("org.postgresql.Driver");
-            hikariDataSource = new HikariDataSource(config);
-        }*/
+        hikariDataSource = new HikariDataSource(config);
     }
 
     private Datasource() {}
