@@ -20,10 +20,19 @@ public class Datasource {
         try {
             hikariDataSource = new HikariDataSource(config);
         } catch (IllegalArgumentException e) {
-            config.setJdbcUrl("jdbc:postgresql://localhost:5432/postgres?user=heroku_library&password=heroku");
+            config.setJdbcUrl(System.getenv().get("JDBC_DATABASE_URL"));
             config.setDriverClassName("org.postgresql.Driver");
             hikariDataSource = new HikariDataSource(config);
         }
+
+        /*
+        try {
+            hikariDataSource = new HikariDataSource(config);
+        } catch (IllegalArgumentException e) {
+            config.setJdbcUrl("jdbc:postgresql://localhost:5432/postgres?user=heroku_library&password=heroku");
+            config.setDriverClassName("org.postgresql.Driver");
+            hikariDataSource = new HikariDataSource(config);
+        }*/
     }
 
     private Datasource() {}
